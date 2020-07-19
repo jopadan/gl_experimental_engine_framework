@@ -8,7 +8,7 @@
 #include "video.h"
 #include "sound.h"
 //#include "music.h"
-
+#include "filesystem.h"
 
 #define DEFAULT_WIDTH 1024
 #define DEFAULT_HEIGHT 768
@@ -20,7 +20,8 @@
 typedef struct system_s
 {
 	bool running;
-	timer_system_t* timer;
+	time_system_t* timer;
+	filesystem_t* files;
 	input_t* input;
 	video_t* video;
 	sound_t* sound;
@@ -30,9 +31,10 @@ typedef struct system_s
 system_t* system_create()
 {
 	system_t* system = calloc(1, sizeof(system_t));
-	system->timer = timer_create();
+	system->timer = time_system_create();
+	system->files = files_create();
 	system->input = input_create();
-	system->video = video_create(640, 480, "test");
+	system->video = video_create(DEFAULT_WIDTH, DEFAULT_HEIGHT, "test");
 	system->sound = sound_create();
 	system->music = music_create();
 	return system;
@@ -59,7 +61,8 @@ bool system_halt(system_t* system)
 		   !sound_halt(system->sound) ||
 		   !video_halt(system->video) ||
 		   !input_halt(system->input) ||
-		   !timer_halt(system->timer))
+		   !files_halt(system->files) ||
+		   !time_system_halt(system->timer))
 			return false;
 		system->running = false;
 		free(system);
@@ -70,7 +73,8 @@ bool system_halt(system_t* system)
 
 bool system_update(system_t* system)
 {
-	if(!timer_update(system->timer) ||
+	if(!time_system_update(system->timer) ||
+	   !files_update(system->files) ||
 	   !input_update(system->input) ||
 	   !video_update(system->video) ||
 	   !sound_update(system->sound) ||

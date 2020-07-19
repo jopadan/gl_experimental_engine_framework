@@ -3,7 +3,7 @@
 
 #include <GLFW/glfw3.h>
 
-typedef struct timer_system_s
+typedef struct time_system_s
 {
 	double t_now;
 	double t_last;
@@ -12,11 +12,11 @@ typedef struct timer_system_s
 	uint64_t tick_now;
 	uint64_t tick_last;
 	uint64_t freq;
-} timer_system_t;
+} time_system_t;
 
-timer_system_t* timer_create()
+time_system_t* time_system_create()
 {
-	timer_system_t* timer = calloc(1, sizeof(timer_system_t));
+	time_system_t* timer = calloc(1, sizeof(time_system_t));
 	timer->t_now = glfwGetTime();
 	timer->t_last = 0;
 	timer->dt = 0;
@@ -27,7 +27,7 @@ timer_system_t* timer_create()
 	return timer;
 }
 
-double timer_update(timer_system_t* timer)
+double time_system_update(time_system_t* timer)
 {
 	timer->t_last = timer->t_now;
 	timer->t_now = glfwGetTime();
@@ -39,7 +39,7 @@ double timer_update(timer_system_t* timer)
 	return timer->dt;
 }
 
-bool timer_halt(timer_system_t* timer)
+bool time_system_halt(time_system_t* timer)
 {
 	if(!timer)
 		return false;

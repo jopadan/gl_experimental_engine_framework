@@ -79,6 +79,36 @@ bool video_update(video_t* video)
 	return true;
 }
 
+bool video_clear(video_t* video)
+{
+	if(!video)
+		return false;
+
+	GLFWwindow* window = glfwGetCurrentContext();
+	if(!window)
+	{
+		window = video->primary_window;
+		glfwMakeContextCurrent(window);
+		if(!window) return false;
+	}
+	fprintf(stderr,"current_scene = %p\n", video->current_scene);
+
+	if(!scene_setup(video->current_scene))
+		return false;
+	if(!scene_clear(video->current_scene))
+		return false;
+
+	return true;
+}
+
+bool video_flip(video_t* video)
+{
+	if(!video)
+		return false;
+	glfwSwapBuffers(video->primary_window);
+	return true;
+}
+
 bool video_halt(video_t* video)
 {
 	if(!video)
@@ -149,7 +179,12 @@ video_t* video_create(int width, int height, const char* title)
 
 	glfwMakeContextCurrent(video->primary_window);
 
+	color_zero(video->current_scene->clear_color);
+
 	video->current_scene = scene_create("test");
+
+	video_clear(video);
+	video_flip(video);
 
 	return video;
 }

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "color.h"
 
 typedef int8_t char_t;
 typedef uint8_t uchar_t;

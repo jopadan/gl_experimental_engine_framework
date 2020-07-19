@@ -61,6 +61,7 @@ typedef struct scene_s
 	camera_t** cameras;
 	size_t num_geometries;
 	geometry_t** geometries;
+	color_t clear_color;
 } scene_t;
 
 scene_t* scene_create(char* name)
@@ -70,7 +71,7 @@ scene_t* scene_create(char* name)
 		return NULL;
 
 	scene->name = strdup(name);
-
+	color_zero(scene->clear_color);
 	return scene;
 }
 
@@ -102,6 +103,7 @@ bool scene_destroy(scene_t* scene)
 	scene = NULL;
 	return true;
 }
+
 bool scene_clear(scene_t* scene)
 {
 	if(!scene)
@@ -110,6 +112,7 @@ bool scene_clear(scene_t* scene)
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW_MATRIX);
 	glLoadIdentity();
+	glClearColor(scene->clear_color.red, scene->clear_color.green, scene->clear_color.blue, scene->clear_color.alpha);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	return true;
 }
