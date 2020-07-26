@@ -2,65 +2,16 @@
 #define _SCENE_H
 
 #include "vector.h"
+#include "mesh.h"
 
-typedef struct camera_s
-{
-	vec3 pos;
-	vec3 up;
-	vec3 look_at;
-	versor orientation;
-	float fov;
-} camera_t;
 
-bool camera_destroy(camera_t* camera)
-{
-	if(!camera)
-		return false;
-	free(camera);
-	camera = NULL;
-	return true; 
-}
-
-typedef struct geometry_s
-{
-	size_t num_vertices;
-	vec4* vertices;
-	vec4* texcoords;
-	vec4* vertex_normals;
-	vec4* face_normals;
-	vec4* faces;
-
-//	octree_t* octree;
-//	sphere_t bounding_sphere;
-//	quad_t bounding_box;
-} geometry_t;
-
-bool geometry_destroy(geometry_t* geometry)
-{
-	if(!geometry)
-		return false;
-	
-	if(geometry->vertices)
-		free(geometry->vertices);
-	if(geometry->texcoords)
-		free(geometry->texcoords);
-	if(geometry->vertex_normals)
-		free(geometry->vertex_normals);
-	if(geometry->face_normals)
-		free(geometry->face_normals);
-	if(geometry->faces)
-		free(geometry->faces);
-	if(geometry = NULL)
-		free(geometry);
-	return true;
-}
 typedef struct scene_s
 {
 	char* name;
 	size_t num_cameras;
 	camera_t** cameras;
-	size_t num_geometries;
-	geometry_t** geometries;
+	size_t num_meshes;
+	mesh_t** meshes;
 	color_t clear_color;
 } scene_t;
 
@@ -89,14 +40,14 @@ bool scene_destroy(scene_t* scene)
 		scene->cameras = NULL;
 	}
 
-	if(scene->geometries)
+	if(scene->meshes)
 	{
-		for(size_t i =0; i < scene->num_geometries; i++)
+		for(size_t i =0; i < scene->num_meshes; i++)
 		{
-			geometry_destroy(scene->geometries[i]);
+			mesh_destroy(scene->meshes[i]);
 		}
-		free(scene->geometries);
-		scene->geometries = NULL;
+		free(scene->meshes);
+		scene->meshes = NULL;
 	}
 
 	free(scene);
@@ -119,15 +70,19 @@ bool scene_clear(scene_t* scene)
 
 void scene_test_screen()
 {
+	glFrontFace(GL_CCW);
+
+	/* front face */
 	glBegin(GL_QUADS);
 	glColor3f(0.5f, 0.0f, 0.4f);
-	glVertex2f(-0.5f, -0.5f);
+	glVertex3f(-0.5f, -0.5f, -0.5f);
 	glColor3f(0.5f, 0.2f, 0.4f);
-	glVertex2f(-0.5f, 0.5f);
+	glVertex3f(-0.5f, 0.5f, -0.5f);
 	glColor3f(0.1f, 0.5f, 0.1f);
-	glVertex2f(0.5f, 0.5f);
+	glVertex3f(0.5f, 0.5f, -0.5f);
 	glColor3f(0.3f, 0.2f, 0.5f);
-	glVertex2f(0.5f, -0.5f);
+	/* bottom right */
+	glVertex3f(0.5f, -0.5f, -0.5f);
 	glEnd();
 }
 

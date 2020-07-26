@@ -51,8 +51,13 @@ bool video_destroy(video_t* video)
 		free(video->modes);
 		free(video->mode);
 	}
+
 	if(video->primary_window)
+	{
 		glfwDestroyWindow(video->primary_window);
+		video->primary_window = NULL;
+	}
+
 	free(video);
 	return true;
 }
@@ -66,7 +71,6 @@ bool video_update(video_t* video)
 		glfwMakeContextCurrent(window);
 		if(!window) return false;
 	}
-	fprintf(stderr,"current_scene = %p\n", video->current_scene);
 
 	if(!scene_setup(video->current_scene))
 		return false;
@@ -113,8 +117,7 @@ bool video_halt(video_t* video)
 {
 	if(!video)
 		return false;
-	if(video->primary_window)
-		glfwDestroyWindow(video->primary_window);
+
 	return video_destroy(video);
 }
 

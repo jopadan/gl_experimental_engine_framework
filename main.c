@@ -21,6 +21,9 @@ void window_close(GLFWwindow* window)
 
 void key_press(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	if(key == GLFW_KEY_ESCAPE)
+		main_system->running = false;
+
 	fprintf(stderr, "key: %d scancode: %d action: %d mods: %d\n", key, scancode, action, mods);
 }
 

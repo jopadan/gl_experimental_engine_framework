@@ -73,6 +73,7 @@ bool system_halt(system_t* system)
 
 bool system_update(system_t* system)
 {
+	glfwPollEvents();
 	if(!time_system_update(system->timer) ||
 	   !files_update(system->files) ||
 	   !input_update(system->input) ||

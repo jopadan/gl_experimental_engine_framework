@@ -36,6 +36,7 @@ double time_system_update(time_system_t* timer)
 	timer->tick_last = timer->tick_now;
 	timer->tick_now = glfwGetTimerValue();
 	timer->freq = glfwGetTimerFrequency();
+	fprintf(stdout, "FPS %f\n", timer->fps);
 	return timer->dt;
 }
 
