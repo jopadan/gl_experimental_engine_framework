@@ -9,6 +9,7 @@ AC_SEARCH_LIBS(dlopen,dl)
 AC_SEARCH_LIBS(glBegin,GL)
 AC_SEARCH_LIBS(glfwInit,glfw3)
 AC_SEARCH_LIBS(glmc_vec4,cglm)
+AC_SEARCH_LIBS(dtx_open_font,drawtext)
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 

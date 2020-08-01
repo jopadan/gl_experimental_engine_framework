@@ -5,15 +5,6 @@
 #include "mesh.h"
 
 
-typedef struct scene_s
-{
-	char* name;
-	size_t num_cameras;
-	camera_t** cameras;
-	size_t num_meshes;
-	mesh_t** meshes;
-	color_t clear_color;
-} scene_t;
 
 scene_t* scene_create(char* name)
 {
@@ -72,7 +63,6 @@ void scene_test_screen()
 {
 	glFrontFace(GL_CCW);
 
-	/* front face */
 	glBegin(GL_QUADS);
 	glColor3f(0.5f, 0.0f, 0.4f);
 	glVertex3f(-0.5f, -0.5f, -0.5f);
@@ -81,9 +71,9 @@ void scene_test_screen()
 	glColor3f(0.1f, 0.5f, 0.1f);
 	glVertex3f(0.5f, 0.5f, -0.5f);
 	glColor3f(0.3f, 0.2f, 0.5f);
-	/* bottom right */
 	glVertex3f(0.5f, -0.5f, -0.5f);
 	glEnd();
+
 }
 
 bool scene_setup(scene_t* scene)
@@ -103,10 +93,8 @@ bool scene_draw(scene_t* scene)
 	if(!scene)
 		return false;
 
-	if(!scene_clear(scene))
-		return false;
+//	scene_test_screen();
 
-	scene_test_screen();
 	return true;
 }
 #endif

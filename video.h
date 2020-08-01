@@ -1,32 +1,9 @@
 #ifndef _VIDEO_H
 #define _VIDEO_H
 
-#include "scene.h"
-
-typedef struct monitor_s
-{
-	GLFWmonitor* monitor;
-	int num_modes;
-	const GLFWvidmode* modes;
-	const GLFWvidmode* mode;
-} monitor_t;
-
-typedef struct video_s
-{
-	int num_monitors;
-
-	GLFWmonitor** monitors;
-	int* num_modes;
-	const GLFWvidmode** modes;
-	const GLFWvidmode** mode;
-
-	monitor_t primary;
-	GLFWwindow* primary_window;
-
-	size_t num_scenes;
-	scene_t** scenes;
-	scene_t* current_scene;
-} video_t;
+#include "globals.h"
+#include "font.h"
+#include <GLFW/glfw3.h>
 
 bool video_destroy(video_t* video)
 {
@@ -62,27 +39,6 @@ bool video_destroy(video_t* video)
 	return true;
 }
 
-bool video_update(video_t* video)
-{
-	GLFWwindow* window = glfwGetCurrentContext();
-	if(!window)
-	{
-		window = video->primary_window;
-		glfwMakeContextCurrent(window);
-		if(!window) return false;
-	}
-
-	if(!scene_setup(video->current_scene))
-		return false;
-	if(!scene_draw(video->current_scene))
-		return false;
-
-	scene_test_screen();
-
-	glfwSwapBuffers(video->primary_window);
-	return true;
-}
-
 bool video_clear(video_t* video)
 {
 	if(!video)
@@ -110,6 +66,7 @@ bool video_flip(video_t* video)
 	if(!video)
 		return false;
 	glfwSwapBuffers(video->primary_window);
+	glfwPollEvents();
 	return true;
 }
 
@@ -120,6 +77,31 @@ bool video_halt(video_t* video)
 
 	return video_destroy(video);
 }
+bool video_update(system_t* system)
+{
+	GLFWwindow* window = glfwGetCurrentContext();
+	if(!window)
+	{
+		window = system->video->primary_window;
+		glfwMakeContextCurrent(window);
+		if(!window) return false;
+	}
+
+	if(!scene_setup(system->video->current_scene))
+		return false;
+	if(!scene_draw(system->video->current_scene))
+		return false;
+
+	if(system->font)
+		if(!font_system_update(system))
+			return false;
+
+	if(!video_flip(system->video))
+		return false;
+
+	return true;
+}
+
 
 video_t* video_create(int width, int height, const char* title)
 {

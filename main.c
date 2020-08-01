@@ -7,11 +7,8 @@
 #include <errno.h>
 #include <error.h>
 #include <GLFW/glfw3.h>
+#include "globals.h"
 
-#include "system.h"
-
-
-system_t* main_system = NULL;
 
 void window_close(GLFWwindow* window)
 {
