@@ -56,13 +56,13 @@ bool scene_clear(scene_t* scene)
 	glLoadIdentity();
 	glClearColor(scene->clear_color.red, scene->clear_color.green, scene->clear_color.blue, scene->clear_color.alpha);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glFrontFace(GL_CCW);
 	return true;
 }
 
 void scene_test_screen()
 {
-	glFrontFace(GL_CCW);
-
+	glPushMatrix();
 	glBegin(GL_QUADS);
 	glColor3f(0.5f, 0.0f, 0.4f);
 	glVertex3f(-0.5f, -0.5f, -0.5f);
@@ -73,6 +73,7 @@ void scene_test_screen()
 	glColor3f(0.3f, 0.2f, 0.5f);
 	glVertex3f(0.5f, -0.5f, -0.5f);
 	glEnd();
+	glPopMatrix();
 
 }
 
@@ -93,7 +94,7 @@ bool scene_draw(scene_t* scene)
 	if(!scene)
 		return false;
 
-//	scene_test_screen();
+	scene_test_screen();
 
 	return true;
 }

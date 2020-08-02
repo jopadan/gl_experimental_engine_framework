@@ -13,7 +13,7 @@
 #include <npth.h>
 #include <drawtext.h>
 
-#define FONT_SZ 24
+#define FONT_SZ 16
 #define SCALE_FACTOR 8
 
 
@@ -42,7 +42,7 @@ bool font_system_add_font(font_system_t* font_system, char* font_filename)
 	}
 
 	font_system->font_files[font_system->num_font_files - 1] = strdup(font_filename);
-	font_system->fonts[font_system->num_fonts - 1] = dtx_open_font(font_filename, 0);
+	font_system->fonts[font_system->num_fonts - 1] = dtx_open_font(font_filename, FONT_SZ);
 
 	if(!font_system->fonts[font_system->num_fonts - 1])
 	{
@@ -112,7 +112,7 @@ font_system_t* font_system_create(video_t* video, time_system_t* timer)
 
 	font_system->current_font = font_system->fonts[font_system->num_fonts - 1];
 
-	dtx_use_font(font_system->current_font, FONT_SZ * SCALE_FACTOR);
+	dtx_use_font(font_system->current_font, FONT_SZ);
 
 	return font_system;
 }
@@ -148,19 +148,18 @@ bool font_system_halt(font_system_t* font_system)
 
 bool font_system_update(system_t* system)
 {
-	sprintf(system->font->texts[0]->data, "FPS: %.2f fps", system->timer->fps);
-
-	glClear(GL_COLOR_BUFFER_BIT);
-
+	GLsizei x = system->video->primary.mode->width;
+	GLsizei y = system->video->primary.mode->height;
+	glPushMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glViewport(0,0, x, y);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	glPushMatrix();
-	glTranslatef(-200, 150, 0);
-	glColor3f(1, 1, 1);
-	/* XXX call dtx_string to draw utf-8 text.
-	 * any transformations and the current color apply
-	 */
+	glOrtho(-x/2, x/2, -y/2, y/2, -1, 1);
+	sprintf(system->font->texts[0]->data, "%.2f fps", system->timer->fps);
+	glColor4fv(system->font->texts[0]->color.v);
+	dtx_use_font(system->font->current_font, FONT_SZ);
+	glTranslatef(-x/2, y/2 - FONT_SZ, 0);
 	dtx_string(system->font->texts[0]->data);
 	glPopMatrix();
 	//font_box_t pos = system->font->texts[0]->dim;
