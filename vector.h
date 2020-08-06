@@ -1,9 +1,7 @@
 #ifndef _VECTOR_H
 #define _VECTOR_H
 
-#include <cglm/cglm.h>
-#include <cglm/struct.h>
-#include <cglm/call.h>
+#include "system_types.h"
 
 typedef struct vec4f
 {

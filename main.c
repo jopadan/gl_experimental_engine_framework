@@ -1,14 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <math.h>
-#include <errno.h>
-#include <error.h>
-#include <GLFW/glfw3.h>
-#include "globals.h"
+#include "system.h"
 
+system_t* main_system = NULL;
 
 void window_close(GLFWwindow* window)
 {
